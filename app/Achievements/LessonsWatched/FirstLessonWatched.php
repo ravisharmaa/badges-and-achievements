@@ -8,7 +8,7 @@ use App\Models\User;
 
 class FirstLessonWatched extends AchievementType
 {
-    public $achievementType = 'lesson_watched';
+    public string $achievementType = 'lesson_watched';
 
     public function __construct()
     {
@@ -19,7 +19,11 @@ class FirstLessonWatched extends AchievementType
         ]);
     }
 
-    public function qualify(User $user)
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function qualify(User $user): bool
     {
         return (bool) $user->watched->count();
     }

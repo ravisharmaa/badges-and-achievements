@@ -16,7 +16,7 @@ class Master extends BadgeType
         ]);
     }
 
-    public function qualify(User $user)
+    public function qualify(User $user): bool
     {
         return $user->achievements()->count() >= 10;
     }

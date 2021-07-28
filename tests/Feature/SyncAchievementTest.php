@@ -39,10 +39,12 @@ class SyncAchievementTest extends TestCase
             ->attach(Lesson::factory()->count(10)->create(),
                 ['watched' => true]);
 
-        $this->artisan('sync-achievements', ['achievement' => 'comment_written']);
+        $this->artisan('sync-achievements', ['achievement' => 'comment_written'])
+        ->expectsOutput('Users have been synced.');
 
 
-        $this->artisan('sync-achievements', ['achievement' => 'lesson_watched']);
+        $this->artisan('sync-achievements', ['achievement' => 'lesson_watched'])
+        ->expectsOutput('Users have been synced.');
 
         $this->assertSame(7, $user->achievements->fresh()->count());
 

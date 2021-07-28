@@ -9,7 +9,7 @@ use App\Achievements\Achievement as AchievementType;
 class FirstCommentWritten extends AchievementType
 {
 
-    public $achievementType = 'comment_written';
+    public string $achievementType = 'comment_written';
 
     public function __construct()
     {
@@ -23,10 +23,10 @@ class FirstCommentWritten extends AchievementType
     /**
      *
      * @param User $user
-     * @return bool|mixed
+     * @return bool
      */
 
-    public function qualify(User $user)
+    public function qualify(User $user): bool
     {
         return !!$user->comments()->count();
     }

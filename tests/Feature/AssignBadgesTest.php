@@ -31,7 +31,7 @@ class AssignBadgesTest extends TestCase
 
         $achievement = $user->achievements->first();
 
-        (new AssignBadge())->handle(new AchievementUnlocked($user, $achievement));
+        (new AssignBadge())->handle(new AchievementUnlocked($user, $achievement->name));
 
 
         $this->assertSame('Beginner', $user->badges->first()->name);
@@ -53,7 +53,7 @@ class AssignBadgesTest extends TestCase
 
         $lastAchievement = $user->achievements->fresh()->last();
 
-        (new AssignBadge())->handle(new AchievementUnlocked($user, $lastAchievement));
+        (new AssignBadge())->handle(new AchievementUnlocked($user, $lastAchievement->name));
 
 
         $this->assertSame('Intermediate', $user->badges->fresh()->last()->name);
@@ -76,7 +76,7 @@ class AssignBadgesTest extends TestCase
 
         $lastAchievement = $user->achievements->fresh()->last();
 
-        (new AssignBadge())->handle(new AchievementUnlocked($user, $lastAchievement));
+        (new AssignBadge())->handle(new AchievementUnlocked($user, $lastAchievement->name));
 
         $this->assertSame('Advanced', $user->badges->fresh()->last()->name);
     }
@@ -96,7 +96,7 @@ class AssignBadgesTest extends TestCase
 
         $user->achievements()->attach($achievement);
 
-        (new AssignBadge())->handle(new AchievementUnlocked($user, Achievement::first()));
+        (new AssignBadge())->handle(new AchievementUnlocked($user, Achievement::first()->name));
 
         $this->assertSame('Master', $user->badges->fresh()->last()->name);
     }
@@ -117,7 +117,7 @@ class AssignBadgesTest extends TestCase
 
         $user->achievements()->attach($achievement);
 
-        (new AssignBadge())->handle(new AchievementUnlocked($user, Achievement::first()));
+        (new AssignBadge())->handle(new AchievementUnlocked($user, Achievement::first()->name));
 
         $badge = $user->badges->last();
 

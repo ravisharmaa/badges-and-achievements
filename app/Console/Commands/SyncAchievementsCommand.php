@@ -65,6 +65,8 @@ class SyncAchievementsCommand extends Command
             }
         });
 
+        $this->info('Users have been synced.');
+
         return 1;
     }
 }

@@ -8,7 +8,7 @@ use App\Models\Achievement;
 
 class TwentyFiveLessonsWatched extends AchievementType
 {
-    public $achievementType = 'lesson_watched';
+    public string $achievementType = 'lesson_watched';
 
     public function __construct()
     {

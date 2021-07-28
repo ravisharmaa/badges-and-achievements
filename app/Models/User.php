@@ -77,6 +77,7 @@ class User extends Authenticatable
     }
 
     /**
+     * Awards achievement to an user. It expects an array of achievement ids.
      * @param $achievements
      *
      * @return $this
@@ -91,12 +92,16 @@ class User extends Authenticatable
         return $this;
     }
 
+    /**
+     * @return BelongsToMany
+     */
     public function badges(): BelongsToMany
     {
         return $this->belongsToMany(Badge::class)->withTimestamps();
     }
 
     /**
+     * Assigns badges to users. It expects an array of badge ids.
      * @param $badges
      *
      * @return $this

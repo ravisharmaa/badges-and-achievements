@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Badge;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
@@ -30,5 +32,21 @@ class ViewAchievementsTest extends TestCase
                 'remaining_to_unlock_next_badge' => 'integer',
             ]);
         });
+    }
+
+    /**
+     * @test
+     */
+    public function itChecksForNonExistentBadges()
+    {
+        Event::fake();
+
+        $user = User::factory()->create();
+
+        $badges = Badge::factory()->count(3)->create()->pluck('id');
+
+        $user->assignBadges([1,2,4]);
+
+        $this->get("/users/{$user->id}/achievements")->assertStatus(200);
     }
 }

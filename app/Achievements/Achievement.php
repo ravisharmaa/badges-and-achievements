@@ -8,7 +8,7 @@ abstract class Achievement
 {
     public $model;
 
-    public $achievementType;
+    public string $achievementType;
 
     /**
      * Checks whether the user qualifies for the achievement.
