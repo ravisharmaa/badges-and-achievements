@@ -7,6 +7,7 @@ use App\Achievements\CommentsWritten\FiveCommentsWritten;
 use App\Achievements\CommentsWritten\TenCommentsWritten;
 use App\Achievements\CommentsWritten\ThreeCommentsWritten;
 use App\Achievements\CommentsWritten\TwentyCommentsWritten;
+use App\Achievements\LessonsWatched\FiftyLessonsWatched;
 use App\Achievements\LessonsWatched\FirstLessonWatched;
 use App\Achievements\LessonsWatched\FiveLessonsWatched;
 use App\Achievements\LessonsWatched\TenLessonsWatched;
@@ -26,7 +27,8 @@ class AchievementServiceProvider extends ServiceProvider
         FiveLessonsWatched::class,
         TenLessonsWatched::class,
         TwentyLessonsWatched::class,
-        TwentyFiveLessonsWatched::class
+        TwentyFiveLessonsWatched::class,
+        FiftyLessonsWatched::class
    ];
 
     /**

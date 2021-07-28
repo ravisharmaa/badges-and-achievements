@@ -88,7 +88,9 @@ class User extends Authenticatable
     {
         $this->achievements()->attach($achievements);
 
-        AchievementUnlocked::dispatch($this, $this->achievements->last());
+        $lastAchievement = $this->achievements->last();
+
+        AchievementUnlocked::dispatch($this, $lastAchievement);
 
         return $this;
     }
@@ -106,7 +108,7 @@ class User extends Authenticatable
      * @param $badges
      * @return $this
      */
-    public function assignBadges($badges)
+    public function assignBadges($badges): User
     {
         $this->badges()->attach($badges);
 

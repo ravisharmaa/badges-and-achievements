@@ -25,6 +25,8 @@ class AwardAchievementForLessonWatched
         });
 
 
+
+
         $event->user->awardAchievement($achievementIdsToAward);
     }
 }
