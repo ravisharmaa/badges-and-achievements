@@ -12,6 +12,11 @@ abstract class Achievement
 
     public $achievementType;
 
+    /**
+     * Checks whether the user qualifies for the achievement.
+     * @param User $user
+     * @return mixed
+     */
     abstract public function qualify(User $user);
 
     /**

@@ -21,8 +21,9 @@ class FirstCommentWritten extends AchievementType
     }
 
     /**
+     *
      * @param User $user
-     * @return bool
+     * @return bool|mixed
      */
 
     public function qualify(User $user)

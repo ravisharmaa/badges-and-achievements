@@ -175,7 +175,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        'App\Providers\AchievementServiceProvider'
+        App\Providers\AchievementServiceProvider::class,
+
+        App\Providers\BadgeServiceProvider::class
+
 
     ],
 

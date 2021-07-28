@@ -22,6 +22,7 @@ class ThreeCommentsWritten extends AchievementType
     }
 
     /**
+     *
      * @param User $user
      * @return bool
      */

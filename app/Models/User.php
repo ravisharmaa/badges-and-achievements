@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
-use App\Models\Comment;
-use Illuminate\Notifications\Notifiable;
+use App\Events\AchievementUnlocked;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -67,23 +69,49 @@ class User extends Authenticatable
 
     /**
      * Achievements related to a user.
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     *
+     * @return BelongsToMany
      */
-
     public function achievements()
     {
-        return $this->belongsToMany(Achievement::class);
+        return $this->belongsToMany(Achievement::class)->withTimestamps();
     }
 
     /**
-     * Attach Award for an achievement
+     * Add achievement.
+     *
      * @param $achievements
+     *
+     * @return $this
      */
     public function awardAchievement($achievements)
     {
         $this->achievements()->attach($achievements);
 
+        AchievementUnlocked::dispatch($this, $this->achievements->last());
 
         return $this;
     }
+
+    /**
+     * @return BelongsToMany
+     */
+
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class)->withTimestamps();
+    }
+
+    /**
+     * @param $badges
+     * @return $this
+     */
+    public function assignBadges($badges)
+    {
+        $this->badges()->attach($badges);
+
+        return $this;
+    }
+
+
 }

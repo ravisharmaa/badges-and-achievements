@@ -4,6 +4,7 @@ namespace App\Badges;
 
 use App\Badges\Badge as BadgeType;
 use App\Models\User;
+use App\Models\Badge;
 
 class Advanced extends BadgeType
 {
@@ -11,12 +12,12 @@ class Advanced extends BadgeType
     {
         $this->model = Badge::create([
             'name' => 'Advanced',
-            'required_achievements' => 4,
+            'required_achievements' => 8,
         ]);
     }
 
     public function qualify(User $user)
     {
-        return 0 == $user->achievements()->count();
+        return $user->achievements()->count() == 8;
     }
 }

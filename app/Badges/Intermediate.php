@@ -1,11 +1,10 @@
 <?php
 
-
 namespace App\Badges;
+
 use App\Badges\Badge as BadgeType;
 use App\Models\Badge;
 use App\Models\User;
-
 
 class Intermediate extends BadgeType
 {
@@ -13,7 +12,7 @@ class Intermediate extends BadgeType
     {
         $this->model = Badge::create([
             'name' => 'Intermediate',
-            'required_achievements' => 4
+            'required_achievements' => 4,
         ]);
     }
 

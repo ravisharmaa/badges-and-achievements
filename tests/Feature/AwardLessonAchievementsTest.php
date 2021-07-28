@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Events\AchievementUnlocked;
 use App\Events\LessonWatched;
 use App\Listeners\AwardAchievementForLessonWatched;
 use App\Models\Lesson;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class AwardLessonAchievementsTest extends TestCase
@@ -18,7 +20,6 @@ class AwardLessonAchievementsTest extends TestCase
      */
     public function userReceivesAnAchievementAfterWatchingALesson()
     {
-
         $user = User::factory()->create();
 
         $lesson = Lesson::factory()->create();
@@ -48,5 +49,31 @@ class AwardLessonAchievementsTest extends TestCase
         (new AwardAchievementForLessonWatched())->handle(new LessonWatched($twentyFifthLesson, $user));
 
         $this->assertSame(5, $user->achievements->count());
+    }
+
+    /**
+     * @test
+     */
+    public function itFiresAnEventWhenAnAchievementIsAwarded()
+    {
+        Event::fake();
+
+        $user = User::factory()->create();
+
+        $user->lessons()
+            ->attach(Lesson::factory()->count(24)->create(),
+                ['watched' => true]);
+
+        $twentyFifthLesson = Lesson::factory()->create();
+
+        $user->lessons()->attach($twentyFifthLesson, ['watched' => true]);
+
+        (new AwardAchievementForLessonWatched())->handle(new LessonWatched($twentyFifthLesson, $user));
+
+        $achievement = $user->achievements->last();
+
+        Event::assertDispatched(function (AchievementUnlocked $event) use ($user, $achievement) {
+            return $event->user->id === $user->id && $event->achievement->id == $achievement->id;
+        });
     }
 }

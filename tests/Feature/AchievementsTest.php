@@ -19,7 +19,7 @@ class AchievementsTest extends TestCase
     /**
      * @test
      */
-    public function aUserCanReceiveAchievementsByWatchingVideoOrWritingComments()
+    public function userCanReceiveAchievementsByWatchingVideoOrWritingComments()
     {
         $user = User::factory()->create();
 
@@ -36,6 +36,5 @@ class AchievementsTest extends TestCase
         (new AwardAchievementForLessonWatched())->handle(new LessonWatched($lesson, $user));
 
         $this->assertSame(2, $user->achievements->count());
-
     }
 }

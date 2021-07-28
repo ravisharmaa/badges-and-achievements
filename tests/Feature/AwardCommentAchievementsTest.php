@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Events\AchievementUnlocked;
 use App\Events\CommentWritten;
 use App\Listeners\AwardAchievementForCommentsWritten;
 use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class AwardCommentAchievementsTest extends TestCase
@@ -34,7 +36,6 @@ class AwardCommentAchievementsTest extends TestCase
      */
     public function userReceivesFiveAchievementsUponPostingTwentiethComment()
     {
-
         $user = User::factory()->create();
 
         Comment::factory()->count(19)->create([
@@ -51,16 +52,28 @@ class AwardCommentAchievementsTest extends TestCase
     }
 
     /**
-     * A basic test example.
-     *
-     * @return void
+     * @test
      */
-    public function testExample()
+    public function itFiresAnEventWhenAnAchievementIsAwarded()
     {
+        Event::fake();
+
         $user = User::factory()->create();
 
-        $response = $this->get("/users/{$user->id}/achievements");
+        Comment::factory()->count(19)->create([
+            'user_id' => $user->id,
+        ]);
 
-        $response->assertStatus(200);
+        $twentiethComment = Comment::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        (new AwardAchievementForCommentsWritten())->handle(new CommentWritten($twentiethComment));
+
+        $achievement = $user->achievements->last();
+
+        Event::assertDispatched(function (AchievementUnlocked $event) use ($user, $achievement) {
+            return $event->user->id === $user->id && $event->achievement->id == $achievement->id;
+        });
     }
 }
