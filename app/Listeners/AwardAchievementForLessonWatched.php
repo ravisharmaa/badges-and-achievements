@@ -16,11 +16,11 @@ class AwardAchievementForLessonWatched
     public function handle($event)
     {
 
-        $achievementIdsToAward = app('achievements')->filter(function($achievement) {
+        $achievementIdsToAward = app('achievements')->filter(function ($achievement) {
             return $achievement->achievementType == 'lesson_watched';
-        })->filter(function($filteredAchievements) use ($event) {
+        })->filter(function ($filteredAchievements) use ($event) {
             return $filteredAchievements->qualify($event->user);
-        })->map(function($achievement) {
+        })->map(function ($achievement) {
             return $achievement->primaryKey();
         });
 

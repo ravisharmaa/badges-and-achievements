@@ -3,8 +3,8 @@
 namespace App\Achievements\LessonsWatched;
 
 use App\Achievements\Achievement as AchievementType;
-use App\Models\User;
 use App\Models\Achievement;
+use App\Models\User;
 
 class FiftyLessonsWatched extends AchievementType
 {
@@ -13,7 +13,7 @@ class FiftyLessonsWatched extends AchievementType
     public function __construct()
     {
         $this->model = Achievement::firstOrCreate([
-            'name' => 'Fifty Lessons Watched',
+            'name' => '50 Lessons Watched',
             'description' => 'Some Description',
             'achievement_type' => 'lesson_watched',
         ]);

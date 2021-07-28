@@ -3,10 +3,12 @@
 namespace Tests\Feature;
 
 use App\Events\AchievementUnlocked;
+use App\Events\BadgeUnlocked;
 use App\Listeners\AssignBadge;
 use App\Models\Achievement;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class AssignBadgesTest extends TestCase
@@ -18,6 +20,7 @@ class AssignBadgesTest extends TestCase
      */
     public function userCanReceiveBeginnerBadgeForLessThanFourAchievements()
     {
+        Event::fake();
         $user = User::factory()->create();
 
         $achievement = Achievement::factory()->create([
@@ -39,6 +42,7 @@ class AssignBadgesTest extends TestCase
      */
     public function userCanReceiveIntermediateBadgeForLessThanEightAchievements()
     {
+        Event::fake();
         $user = User::factory()->create();
 
         $achievement = Achievement::factory()->count(7)->create([
@@ -51,7 +55,6 @@ class AssignBadgesTest extends TestCase
 
         (new AssignBadge())->handle(new AchievementUnlocked($user, $lastAchievement));
 
-        print $user->achievements->count();
 
         $this->assertSame('Intermediate', $user->badges->fresh()->last()->name);
     }
@@ -62,7 +65,7 @@ class AssignBadgesTest extends TestCase
 
     public function userCanReceiveAdvancedBadgeForLessThanEightAchievements()
     {
-        $this->markTestSkipped();
+        Event::fake();
         $user = User::factory()->create();
 
         $achievement = Achievement::factory()->count(9)->create([
@@ -75,8 +78,6 @@ class AssignBadgesTest extends TestCase
 
         (new AssignBadge())->handle(new AchievementUnlocked($user, $lastAchievement));
 
-        print $user->achievements->count();
-
         $this->assertSame('Advanced', $user->badges->fresh()->last()->name);
     }
 
@@ -84,8 +85,9 @@ class AssignBadgesTest extends TestCase
      * @test
      */
 
-    public function userCanReceiveMasterBadgeForLessThanEightAchievements()
+    public function userCanReceiveMasterBadgeForGreaterThanTenAchievements()
     {
+        Event::fake();
         $user = User::factory()->create();
 
         $achievement = Achievement::factory()->count(12)->create([
@@ -94,11 +96,34 @@ class AssignBadgesTest extends TestCase
 
         $user->achievements()->attach($achievement);
 
-        $lastAchievement = $user->achievements->fresh()->last();
+        (new AssignBadge())->handle(new AchievementUnlocked($user, Achievement::first()));
 
-        (new AssignBadge())->handle(new AchievementUnlocked($user, $lastAchievement));
+        $this->assertSame('Master', $user->badges->fresh()->last()->name);
+    }
 
+    /**
+     * @test
+     */
 
-        $this->assertSame('Advanced', $user->badges->fresh()->last()->name);
+    public function itFiresEventWhenABadgeIsAssigned()
+    {
+        Event::fake();
+
+        $user = User::factory()->create();
+
+        $achievement = Achievement::factory()->count(12)->create([
+            'achievement_type' => 'comment_written',
+        ]);
+
+        $user->achievements()->attach($achievement);
+
+        (new AssignBadge())->handle(new AchievementUnlocked($user, Achievement::first()));
+
+        $badge = $user->badges->last();
+
+        Event::assertDispatched(function(BadgeUnlocked $event) use ($user, $badge){
+            return $event->badgeName == $badge->name && $event->user->name == $user->name;
+        });
+
     }
 }

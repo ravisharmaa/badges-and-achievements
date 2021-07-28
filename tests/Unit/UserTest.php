@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class UserTest extends TestCase
@@ -49,6 +50,7 @@ class UserTest extends TestCase
 
     public function it_can_award_achievement()
     {
+        Event::fake();
 
     }
 }

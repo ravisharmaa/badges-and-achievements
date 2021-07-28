@@ -19,7 +19,7 @@ class AchievementsTest extends TestCase
     /**
      * @test
      */
-    public function userCanReceiveAchievementsByWatchingVideoOrWritingComments()
+    public function userCanReceiveAchievementsByWatchingVideosOrWritingComments()
     {
         $user = User::factory()->create();
 

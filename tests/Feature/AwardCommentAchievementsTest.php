@@ -73,7 +73,7 @@ class AwardCommentAchievementsTest extends TestCase
         $achievement = $user->achievements->last();
 
         Event::assertDispatched(function (AchievementUnlocked $event) use ($user, $achievement) {
-            return $event->user->id === $user->id && $event->achievement->id == $achievement->id;
+            return $event->user->id === $user->id && $event->achievement == $achievement->name;
         });
     }
 }

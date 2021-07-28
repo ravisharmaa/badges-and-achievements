@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Achievements;
-
 
 use App\Models\User;
 
@@ -28,5 +26,4 @@ abstract class Achievement
     {
         return $this->model->getKey();
     }
-
 }

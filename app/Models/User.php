@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Events\AchievementUnlocked;
+use App\Events\BadgeUnlocked;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -46,7 +47,7 @@ class User extends Authenticatable
     /**
      * The comments that belong to the user.
      */
-    public function comments()
+    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Comment::class);
     }
@@ -54,7 +55,7 @@ class User extends Authenticatable
     /**
      * The lessons that a user has access to.
      */
-    public function lessons()
+    public function lessons(): BelongsToMany
     {
         return $this->belongsToMany(Lesson::class);
     }
@@ -62,58 +63,52 @@ class User extends Authenticatable
     /**
      * The lessons that a user has watched.
      */
-    public function watched()
+    public function watched(): BelongsToMany
     {
         return $this->belongsToMany(Lesson::class)->wherePivot('watched', true);
     }
 
     /**
      * Achievements related to a user.
-     *
-     * @return BelongsToMany
      */
-    public function achievements()
+    public function achievements(): BelongsToMany
     {
         return $this->belongsToMany(Achievement::class)->withTimestamps();
     }
 
     /**
-     * Add achievement.
-     *
      * @param $achievements
      *
      * @return $this
      */
-    public function awardAchievement($achievements)
+    public function awardAchievement($achievements): User
     {
-        $this->achievements()->attach($achievements);
-
+        $this->achievements()->syncWithoutDetaching($achievements);
         $lastAchievement = $this->achievements->last();
 
-        AchievementUnlocked::dispatch($this, $lastAchievement);
+        AchievementUnlocked::dispatch($this, $lastAchievement->name);
 
         return $this;
     }
 
-    /**
-     * @return BelongsToMany
-     */
-
-    public function badges()
+    public function badges(): BelongsToMany
     {
         return $this->belongsToMany(Badge::class)->withTimestamps();
     }
 
     /**
      * @param $badges
+     *
      * @return $this
      */
     public function assignBadges($badges): User
     {
-        $this->badges()->attach($badges);
+        $this->badges()->syncWithoutDetaching($badges);
+
+        $lastBadge = $this->badges->last();
+
+        BadgeUnlocked::dispatch($this, $lastBadge->name);
 
         return $this;
     }
-
-
 }

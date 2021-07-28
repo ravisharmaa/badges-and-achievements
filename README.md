@@ -1,62 +1,62 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Badges And Achievements
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+The task from iPhone Photography school. I named it Badges and Achievements.
 
-## About Laravel
+## Assumptions
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. One user can have only 1 role, as the given data structure.
+1. RoleIds and UserIds are unique.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Solution formulation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Steps I thought of and executed for solving the get subordinates for given user:
 
-## Learning Laravel
+1. Get user by user id from list of users
+1. Get all child roles of the given users' role
+    1. [Nest](https://github.com/geshan/subordinater/blob/master/src/repository/role.js#L7) roles for the given role to get a tree of roles
+    1. Get all [descendent](https://github.com/geshan/subordinater/blob/master/src/repository/role.js#L15) role ids for all children of given role
+1. Get all users that have the roles from step 2
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Step 2 has the main logic in my solution, it can be found in the role repository.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Libraries/Tools used
 
-## Laravel Sponsors
+* No main dependency. It might have been easier/less code to do this with something like [Lodash](https://lodash.com/), but that would defeat the purpose of the coding task.
+* Written in node with some ES6 syntax. tested on Node v12.13.1
+* Uses Jest for testing
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## How to setup
 
-### Premium Partners
+Run the following commands to setup, given `node` and `npm` is available:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
+1. git clone git@github.com:geshan/subordinater.git
+1. cd subordinater
+1. npm install
+1. node index.js -> to see a test output
 
-## Contributing
+## Running tests
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+* To run the tests run `npm t` or `jest` on the project root.
+* For code coverage run `npm run test:cov` , coverage files will be in the `coverage` folder.
 
-## Code of Conduct
+The current coverage is 100%.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+![Code Coverage](https://user-images.githubusercontent.com/170554/93594827-edcc8d00-f9f9-11ea-992a-4c20c5694bf8.png)
 
-## Security Vulnerabilities
+## Decisions and tradeoffs
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. Basic require is chosen in place of ES6 imports and class keyword for ease.
+1. I have chosen more of a functional/procedural path with more pure functions than object oriented pattern. I think it is better in this small problem space than trying to model or use a design pattern like composition design pattern where a user will have a role object.
+1. Setting users and roles as class variable (this.roles) can be one fast way to encapsulate the data. I was focused more on getting the result and testing the code with a high code coverage.
+1. There are places to improve. Still, I would not opt to do them all for a small problem domain like this one. As software engineers we need to find a balance.
 
-## License
+## If it was a bigger project
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This is a coding challenge and scope is quite small. If it was a bigger real project, doing the following would be better:
+
+1. More focus on architecture and software design would be necesssary. For a solution of ~80 lines it would be over optimization IMHO.
+1. Choosing typescript or using some validator like [validator](https://github.com/validatorjs/validator.js) or [Joi](https://github.com/hapijs/joi) for validation would be better.
+1. If a RDBMS is used, it would be easier to solve this with a relational database and a select SQL than on the code.
+1. It would be great to have some mutation testing in place like [Stryker](https://stryker-mutator.io/) to
+   know how effective the tests are in addition to the coverage.
+1. For a team project, it will be good to have the project dockerized.

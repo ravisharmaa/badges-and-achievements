@@ -10,7 +10,7 @@ class Intermediate extends BadgeType
 {
     public function __construct()
     {
-        $this->model = Badge::create([
+        $this->model = Badge::firstOrCreate([
             'name' => 'Intermediate',
             'required_achievements' => 4,
         ]);

@@ -2,28 +2,27 @@
 
 namespace App\Events;
 
-use App\Models\Achievement;
 use App\Models\User;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class AchievementUnlocked
+class BadgeUnlocked
 {
     use Dispatchable;
     use SerializesModels;
 
     public User $user;
 
-    public string $achievement;
+    public string $badgeName;
 
     /**
      * Create a new event instance.
-     * @param User $user
-     * @param string $achievement
+     *
+     * @return void
      */
-    public function __construct(User $user, string $achievement)
+    public function __construct(User $user, string $badgeName)
     {
         $this->user = $user;
-        $this->achievement = $achievement;
+        $this->badgeName = $badgeName;
     }
 }

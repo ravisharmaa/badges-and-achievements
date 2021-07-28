@@ -15,11 +15,11 @@ class AwardAchievementForCommentsWritten
      */
     public function handle($event)
     {
-        $achievementIdsToAward = app('achievements')->filter(function($achievement) {
+        $achievementIdsToAward = app('achievements')->filter(function ($achievement) {
             return $achievement->achievementType == 'comment_written';
-        })->filter(function($filteredAchievements) use ($event) {
+        })->filter(function ($filteredAchievements) use ($event) {
             return $filteredAchievements->qualify($event->comment->user);
-        })->map(function($achievement) {
+        })->map(function ($achievement) {
             return $achievement->primaryKey();
         });
 

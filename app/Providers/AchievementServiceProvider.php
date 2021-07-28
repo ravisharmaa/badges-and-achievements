@@ -29,7 +29,7 @@ class AchievementServiceProvider extends ServiceProvider
         TwentyLessonsWatched::class,
         TwentyFiveLessonsWatched::class,
         FiftyLessonsWatched::class
-   ];
+    ];
 
     /**
      * Bootstrap services.

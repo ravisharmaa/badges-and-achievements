@@ -1,7 +1,7 @@
 <?php
 
-
 namespace App\Achievements\CommentsWritten;
+
 use App\Models\User;
 use App\Models\Achievement;
 use App\Achievements\Achievement as AchievementType;

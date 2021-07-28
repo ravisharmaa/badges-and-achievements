@@ -13,7 +13,7 @@ class FiveLessonsWatched extends AchievementType
     public function __construct()
     {
         $this->model = Achievement::firstOrCreate([
-            'name' => 'Five Lessons Watched',
+            'name' => '5 Lessons Watched',
             'description' => 'Some Description',
             'achievement_type' => 'lesson_watched',
         ]);

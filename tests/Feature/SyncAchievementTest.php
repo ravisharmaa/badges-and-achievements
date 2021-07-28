@@ -20,7 +20,6 @@ class SyncAchievementTest extends TestCase
     {
         $this->artisan('sync-achievements', ['achievement' => null])
         ->expectsOutput('Argument is required');
-
     }
 
     /**

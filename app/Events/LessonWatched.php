@@ -9,7 +9,8 @@ use Illuminate\Foundation\Events\Dispatchable;
 
 class LessonWatched
 {
-    use Dispatchable, SerializesModels;
+    use Dispatchable;
+    use SerializesModels;
 
     public $lesson;
     public $user;
@@ -25,5 +26,4 @@ class LessonWatched
         $this->lesson = $lesson;
         $this->user = $user;
     }
-
 }

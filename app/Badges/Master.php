@@ -10,14 +10,14 @@ class Master extends BadgeType
 {
     public function __construct()
     {
-        $this->model = Badge::create([
-            'name' => 'Intermediate',
+        $this->model = Badge::firstOrCreate([
+            'name' => 'Master',
             'required_achievements' => 10,
         ]);
     }
 
     public function qualify(User $user)
     {
-        return $user->achievements()->count() == 10;
+        return $user->achievements()->count() >= 10;
     }
 }

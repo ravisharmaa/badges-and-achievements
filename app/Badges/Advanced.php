@@ -10,7 +10,7 @@ class Advanced extends BadgeType
 {
     public function __construct()
     {
-        $this->model = Badge::create([
+        $this->model = Badge::firstOrCreate([
             'name' => 'Advanced',
             'required_achievements' => 8,
         ]);
@@ -18,6 +18,6 @@ class Advanced extends BadgeType
 
     public function qualify(User $user)
     {
-        return $user->achievements()->count() == 8;
+        return $user->achievements()->count() >= 8;
     }
 }

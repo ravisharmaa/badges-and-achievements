@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Achievements\CommentsWritten;
-
 
 use App\Models\Achievement;
 use App\Models\User;
@@ -10,7 +8,6 @@ use App\Achievements\Achievement as AchievementType;
 
 class TenCommentsWritten extends AchievementType
 {
-    public $model;
 
     public $achievementType = 'comment_written';
 

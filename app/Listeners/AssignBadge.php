@@ -16,11 +16,11 @@ class AssignBadge
     public function handle($event)
     {
         $badgeIdsToAssign = app('badges')
-            ->filter(function($filteredBadges) use ($event) {
-            return $filteredBadges->qualify($event->user);
-        })->map(function($badge) {
-            return $badge->primaryKey();
-        });
+            ->filter(function ($filteredBadges) use ($event) {
+                return $filteredBadges->qualify($event->user);
+            })->map(function ($badge) {
+                return $badge->primaryKey();
+            });
 
 
 

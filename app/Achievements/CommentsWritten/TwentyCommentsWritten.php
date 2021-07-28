@@ -20,7 +20,6 @@ class TwentyCommentsWritten extends AchievementType
     }
 
     /**
-     * @param User $user
      * @return bool
      */
     public function qualify(User $user)

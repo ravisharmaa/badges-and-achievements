@@ -24,7 +24,7 @@ class BadgeServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->singleton('badges', function() {
+        $this->app->singleton('badges', function () {
             return collect($this->badges)->map(function ($badge) {
                 return new $badge();
             });
