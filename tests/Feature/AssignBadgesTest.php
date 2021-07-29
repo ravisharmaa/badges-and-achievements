@@ -40,7 +40,7 @@ class AssignBadgesTest extends TestCase
     /**
      * @test
      */
-    public function userCanReceiveIntermediateBadgeForLessThanEightAchievements()
+    public function userCanReceiveIntermediateBadgeForFourAchievements()
     {
         Event::fake();
         $user = User::factory()->create();
@@ -63,7 +63,7 @@ class AssignBadgesTest extends TestCase
      * @test
      */
 
-    public function userCanReceiveAdvancedBadgeForLessThanEightAchievements()
+    public function userCanReceiveAdvancedBadgeAchievementsGreaterThanOrEqualToEight()
     {
         Event::fake();
         $user = User::factory()->create();

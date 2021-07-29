@@ -15,8 +15,10 @@ class AchievementsController extends Controller
      */
     public function index(User $user): JsonResponse
     {
+        $unlockedAchievements = $user->achievements()->pluck('name');
+
         $nextAvailableAchievements = Achievement::all()
-            ->whereNotIn('name', $user->achievements()->pluck('name'))->pluck('name');
+            ->whereNotIn('name', $unlockedAchievements)->pluck('name');
 
         $badge = $user->badges->last();
 
@@ -31,7 +33,7 @@ class AchievementsController extends Controller
         }
 
         return response()->json([
-            'unlocked_achievements' => $user->achievements()->pluck('name'),
+            'unlocked_achievements' => $unlockedAchievements,
             'next_available_achievements' => $nextAvailableAchievements,
             'current_badge' => is_null($badge) ? '' : $badge->name,
             'next_badge' => is_null($nextBadge) ? '' : $nextBadge->name,

@@ -8,7 +8,7 @@ These have been the assumptions while working on the test application.
 2. User can have many badges and vice versa.
 3. The events `Lesson Watched` and `Comment Written` are fired whenever a user watches a video or comments down, and the application acts according to that.
 4. The application has following achievements:
-    1. FirsCommentWritten
+    1. First CommentWritten
     2. Three Comments Written
     3. FiveCommentsWritten
     4. TenCommentsWritten
@@ -119,9 +119,9 @@ The tests provide a basic overview of the application. Some steps can be done to
 
 ## Decisions, tradeoffs and constraints
 
-1. I have used an implicit way of storing achievement, and badge names into the database while an user's achievements are calculated via the event. The constructor for each achievement add the necessary name for the achievement. An admin might want to edit their properties which currently,
+1. I have used an implicit way of storing achievement, and badge names into the database while a user's achievements are calculated via the event. The constructor for each achievement add the necessary name for the achievement. An admin might want to edit their properties which currently,
    is a bit difficult. If there were a proper backend application which could help manage updates and addition of badges and achievements but it was out of the scope regarding the task and given time frame.
-1. I have also added a property `achievement_type` in the database which seems redundant as it is used in the achivement class and in the table. Nevertheless, it might help in grouping the users via their achievement types.
+1. I have also added a property `achievement_type` in the database which seems redundant as it is used in the achievement class and in the table. Nevertheless, it might help in grouping the users via their achievement types.
 1. I have also assumed that the next badge is in an incrementing order, which might not be the case always. I thought of adding a `next_badge` in the badges table but somehow opted from that.
 1. There are places to improve. Still, I would not opt to do them all for a small problem domain like this one. As software engineers we need to find a balance.
 
