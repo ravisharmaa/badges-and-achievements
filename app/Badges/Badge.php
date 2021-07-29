@@ -6,7 +6,7 @@ use App\Models\User;
 
 abstract class Badge
 {
-    public $model;
+    protected $model;
 
     abstract public function qualify(User $user);
 

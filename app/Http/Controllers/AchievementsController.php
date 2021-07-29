@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 class AchievementsController extends Controller
 {
     /**
-     * Returns the json response for users achievements.
+     * Returns the json response for a users and their achievements.
      *
      */
     public function index(User $user): JsonResponse

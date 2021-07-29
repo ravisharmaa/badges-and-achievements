@@ -16,6 +16,10 @@ class Intermediate extends BadgeType
         ]);
     }
 
+    /**
+     * @param User $user
+     * @return bool
+     */
     public function qualify(User $user): bool
     {
         return $user->achievements()->count() >= 4;

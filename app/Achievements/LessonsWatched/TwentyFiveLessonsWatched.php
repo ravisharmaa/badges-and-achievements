@@ -19,7 +19,11 @@ class TwentyFiveLessonsWatched extends AchievementType
         ]);
     }
 
-    public function qualify(User $user)
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function qualify(User $user): bool
     {
         return $user->watched()->count() >= 25;
     }

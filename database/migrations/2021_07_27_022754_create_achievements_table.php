@@ -17,7 +17,7 @@ class CreateAchievementsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('description');
-            $table->enum('achievement_type', ['comment_written','lesson_watched']);
+            $table->string('achievement_type'); //desired types are comment_written and lesson_watched
             $table->timestamps();
         });
     }

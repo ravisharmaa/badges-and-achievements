@@ -1,62 +1,135 @@
 # Badges And Achievements
 
-The task from iPhone Photography school. I named it Badges and Achievements.
+The task from iPhone Photography School.
 
 ## Assumptions
+These have been the assumptions while working on the test application.
+1. User can have many achievements and vice versa.
+2. User can have many badges and vice versa.
+3. The events `Lesson Watched` and `Comment Written` are fired whenever a user watches a video or comments down, and the application acts according to that.
+4. The application has following achievements:
+    1. FirsCommentWritten
+    2. Three Comments Written
+    3. FiveCommentsWritten
+    4. TenCommentsWritten
+    5. TwentyCommentsWritten
+    6. FirstLessonWatched
+    7. 5 Lessons Watched
+    8. 25 Lessons Watched
+    9. 50 Lessons Watched
 
-1. One user can have only 1 role, as the given data structure.
-1. RoleIds and UserIds are unique.
+5. The application has following badges:
+    1. Beginner: 0 Achievements
+    2. Intermediate: 4 Achievements
+    3. Advanced: 8 Achievements
+    4. Master: 10 Achievements
+
+    
 
 ## Solution formulation
 
-Steps I thought of and executed for solving the get subordinates for given user:
+Steps I thought of and executed for solving the given problem:
 
-1. Get user by user id from list of users
-1. Get all child roles of the given users' role
-    1. [Nest](https://github.com/geshan/subordinater/blob/master/src/repository/role.js#L7) roles for the given role to get a tree of roles
-    1. Get all [descendent](https://github.com/geshan/subordinater/blob/master/src/repository/role.js#L15) role ids for all children of given role
-1. Get all users that have the roles from step 2
+1. Prepare database tables which can persist the assignment of badges and achievements for retrieval.
 
-Step 2 has the main logic in my solution, it can be found in the role repository.
+2. Hook the event-listeners of `CommentWritten`, `LessonWatched` and handle the logic of assigning achievements of either 
+   comment written or lesson watched.
+   1. Add those achievements classes by their respective types either `lesson_watched` or `comment_written` within the 
+    app and a service provider `AchievementServiceProvider`.The `boot` method for this provider loops over the classes
+      and instantiates and keeps them inside a singleton class within the container.
+   2. Afterwards when a user comments or watches video the respective events fire and the listeners `AwardAchievementsForCommentsWritten`,`AwardAchievementsForLessonWatched`   handle method access the achievements from the container and determine the event with the help of a property `achievementType` within the achievement classes and sends them to proper achievements to check whether the subject in question qualifies for the event or not.
+   3. If they qualify for the achievement add the record to the `user_achievements` table and fire event `AchievementUnlocked`
+      as the task has asked.
+
+3. Add badge classes in the `Badges` directory and allow them to determine badges.
+    1. Assign badge to the user in question when they receive an achievement with the help of the event `AchievementUnlocked` and listener `AssignBadges`. It also uses the exact approach of handling achievements, the only difference is the logic to ask the subject in question to award a badge. Please refer to `BadgeServiceProvider` and the classes inside the `Badge` directory to find more.
+       
+4. Add a console command to sync the achievements of existing users.
+    1. The achievements have a type of `comment_written` and `lesson_watched` and for the case of existing users 
+     the commands `php artisan sync-achievements comment_written` and `php artisan sync-achievements lesson_watched`
+       help them sync their achievements.
+    
+       
 
 ## Libraries/Tools used
+* No any third party library other than the framework itself provides.
+* Uses php 8.0, but php >= 7.4 can also be used.
+* Uses phpunit for testing and xDebug 3.0 for code coverage analysis.
 
-* No main dependency. It might have been easier/less code to do this with something like [Lodash](https://lodash.com/), but that would defeat the purpose of the coding task.
-* Written in node with some ES6 syntax. tested on Node v12.13.1
-* Uses Jest for testing
+## Installation
 
-## How to setup
+Run the following commands to set up the application, given that `php` and `composer` are available:
 
-Run the following commands to setup, given `node` and `npm` is available:
+1. `git clone` https://github.com/ravisharmaa/badges-and-achievements.git
+1. `cd badges-and-achievements`
+1. `composer install`
+1. `cp .env.example .env`
 
-1. git clone git@github.com:geshan/subordinater.git
-1. cd subordinater
-1. npm install
-1. node index.js -> to see a test output
+## Running Tests
+1. `vendor/bin/phpunit`
+1. For code coverage:  `vendor/bin/phpunit --coverage-text`
+1. Additionally a report can also be generated using the command `vendor/bin/phpunit --coverage-html=reports`
 
-## Running tests
+The current code coverage is 91%. Given the laravel frameworks code which show uncovered while using xDebug.
 
-* To run the tests run `npm t` or `jest` on the project root.
-* For code coverage run `npm run test:cov` , coverage files will be in the `coverage` folder.
+![Code Coverage Report](https://user-images.githubusercontent.com/22126232/127415266-d6bb3f87-035a-48ec-83dc-e0e2a8d11dda.png)
 
-The current coverage is 100%.
+## Usage of the project
+The tests provide a basic overview of the application. Some steps can be done to see the application in action, which are.
 
-![Code Coverage](https://user-images.githubusercontent.com/170554/93594827-edcc8d00-f9f9-11ea-992a-4c20c5694bf8.png)
+1. The data for comments and lessons can be seeded via Tinker and achievements and badges can be seen.
+    1. `php artisan tinker`
+    2. ```php
+       $user = User::factory()->create();
 
-## Decisions and tradeoffs
+        Comment::factory()->count(10)->create([
+           'user_id' => $user->id,
+       ]);
 
-1. Basic require is chosen in place of ES6 imports and class keyword for ease.
-1. I have chosen more of a functional/procedural path with more pure functions than object oriented pattern. I think it is better in this small problem space than trying to model or use a design pattern like composition design pattern where a user will have a role object.
-1. Setting users and roles as class variable (this.roles) can be one fast way to encapsulate the data. I was focused more on getting the result and testing the code with a high code coverage.
+        $user->lessons()->attach(Lesson::factory()->count(10)->create(),['watched' => true]);
+        
+        php artisan sync-achievements comment_written
+        php artisan sync-achievements lesson_watched 
+       
+       ```
+    3. Which results in the  output for url `/users/1/achievements`
+        ```json
+        {
+            "unlocked_achievements": [
+                "First Comment Written",
+                "3 Comments Written",
+                "5 Comments Written",
+                "10 Comments Written",
+                "First Lesson Watched",
+                "5 Lessons Watched",
+                "10 Lessons Watched"
+            ],
+            "next_available_achievements": [
+                "20 Comments Written",
+                "20 Lessons Watched",
+                "25 Lessons Watched",
+                "50 Lessons Watched"
+            ],
+            "current_badge": "Intermediate",
+            "next_badge": "Advanced",
+            "remaining_to_unlock_next_badge": 4
+        } 
+        ```
+
+
+## Decisions, tradeoffs and constraints
+
+1. I have used an implicit way of storing achievement, and badge names into the database while an user's achievements are calculated via the event. The constructor for each achievement add the necessary name for the achievement. An admin might want to edit their properties which currently,
+   is a bit difficult. If there were a proper backend application which could help manage updates and addition of badges and achievements but it was out of the scope regarding the task and given time frame.
+1. I have also added a property `achievement_type` in the database which seems redundant as it is used in the achivement class and in the table. Nevertheless, it might help in grouping the users via their achievement types.
+1. I have also assumed that the next badge is in an incrementing order, which might not be the case always. I thought of adding a `next_badge` in the badges table but somehow opted from that.
 1. There are places to improve. Still, I would not opt to do them all for a small problem domain like this one. As software engineers we need to find a balance.
 
-## If it was a bigger project
+## Future Improvements.
 
-This is a coding challenge and scope is quite small. If it was a bigger real project, doing the following would be better:
+It was a challenge. However, if I had to improve upon this:
 
-1. More focus on architecture and software design would be necesssary. For a solution of ~80 lines it would be over optimization IMHO.
-1. Choosing typescript or using some validator like [validator](https://github.com/validatorjs/validator.js) or [Joi](https://github.com/hapijs/joi) for validation would be better.
-1. If a RDBMS is used, it would be easier to solve this with a relational database and a select SQL than on the code.
-1. It would be great to have some mutation testing in place like [Stryker](https://stryker-mutator.io/) to
-   know how effective the tests are in addition to the coverage.
+1. I would work out to find out a proper way to store next badges.
+1. Achievements could be editable, or a command to create the achievements and the related class would be great!
+   The developer then only had to add the related class and qualifier logic and be done.
 1. For a team project, it will be good to have the project dockerized.

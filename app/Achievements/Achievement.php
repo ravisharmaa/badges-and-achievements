@@ -6,7 +6,7 @@ use App\Models\User;
 
 abstract class Achievement
 {
-    public $model;
+    protected $model;
 
     public string $achievementType;
 
