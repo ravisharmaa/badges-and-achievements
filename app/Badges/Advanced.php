@@ -10,10 +10,7 @@ class Advanced extends BadgeType
 {
     public function __construct()
     {
-        $this->model = Badge::firstOrCreate([
-            'name' => 'Advanced',
-            'required_achievements' => 8,
-        ]);
+        parent::__construct('Advanced', 8);
     }
 
     /**

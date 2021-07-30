@@ -8,6 +8,14 @@ abstract class Badge
 {
     protected $model;
 
+    public function __construct(string $name, int $requiredAchievements)
+    {
+        $this->model = \App\Models\Badge::firstOrCreate([
+            'name' => $name,
+            'required_achievements' => $requiredAchievements,
+        ]);
+    }
+
     abstract public function qualify(User $user);
 
     /**

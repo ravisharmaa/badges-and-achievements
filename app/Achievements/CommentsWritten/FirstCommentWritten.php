@@ -8,16 +8,13 @@ use App\Achievements\Achievement as AchievementType;
 
 class FirstCommentWritten extends AchievementType
 {
-
     public string $achievementType = 'comment_written';
+
+    public $requiredAchievements = 0;
 
     public function __construct()
     {
-        $this->model = Achievement::firstOrCreate([
-            'name' => 'First Comment Written',
-            'description' => 'Some Description',
-            'achievement_type' => 'comment_written'
-        ]);
+        parent::__construct('First Comment Written', 'Some Description');
     }
 
     /**

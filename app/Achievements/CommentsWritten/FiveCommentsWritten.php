@@ -12,11 +12,7 @@ class FiveCommentsWritten extends AchievementType
 
     public function __construct()
     {
-        $this->model = Achievement::firstOrCreate([
-            'name' => '5 Comments Written',
-            'description' => 'Some Description',
-            'achievement_type' => 'comment_written',
-        ]);
+        parent::__construct('5 Comments Written', 'Some Description');
     }
 
     /**

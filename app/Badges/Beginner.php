@@ -10,10 +10,7 @@ class Beginner extends BadgeType
 {
     public function __construct()
     {
-        $this->model = Badge::firstOrCreate([
-           'name' => 'Beginner',
-           'required_achievements' => 0
-        ]);
+        parent::__construct('Beginner', 0);
     }
 
     /**

@@ -3,7 +3,6 @@
 namespace App\Achievements\CommentsWritten;
 
 use App\Achievements\Achievement as AchievementType;
-use App\Models\Achievement;
 use App\Models\User;
 
 class TwentyCommentsWritten extends AchievementType
@@ -12,11 +11,7 @@ class TwentyCommentsWritten extends AchievementType
 
     public function __construct()
     {
-        $this->model = Achievement::firstOrCreate([
-            'name' => '20 Comments Written',
-            'description' => 'Some Description',
-            'achievement_type' => 'comment_written',
-        ]);
+        parent::__construct('20 Comments Written', 'Some Description');
     }
 
     /**
